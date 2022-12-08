@@ -5,10 +5,16 @@ Automated Line Notify via Google Calendar
 
 ![image](https://user-images.githubusercontent.com/82520836/206361304-533954b8-2604-4995-a620-de24dcf7d897.png)
 ![image](https://user-images.githubusercontent.com/82520836/206361071-943b9349-d9e5-4cda-a92d-7f5365718ca0.png)
+![image](https://user-images.githubusercontent.com/82520836/206362291-4a9a9656-6f8e-4eba-8171-d25980507d81.png)
+
 
 โค้ดเก็บอยู่ใน main ใน repo นี้
 
 จำเป็นต้องใช้ public link ของ gg calendar และ line notify token จึงจะสามารถใช้งานได้
+
+![image](https://user-images.githubusercontent.com/82520836/206362253-52198758-14e5-490b-9edc-9d51d08a36ea.png)
+![image](https://user-images.githubusercontent.com/82520836/206362269-f6297c8e-2fc9-4fd9-a8b1-096054b5416e.png)
+
 
 ใช้ **appscripts** เป็นตัวรันโค้ดตามเวลาที่กำหนด โดยตั้ง trigger ดังตัวอย่างด้านล่าง
 
