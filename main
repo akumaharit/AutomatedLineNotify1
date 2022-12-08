@@ -1,0 +1,147 @@
+function customMessage(){
+ sendMessage("\n"+ "ขออภัยแทนน้อนเอแคร์ด้วยนะคะ พอดีพึ่งฝึกงานวันแรก","**ใส่tokencodeในนี้**") //รุ่น
+}
+
+
+//var accessToken = "**ใส่tokencodeในนี้**"; //สนามเด้กเล่น
+//var accessToken = "**ใส่tokencodeในนี้**"; //ส่วนตัว
+
+
+
+#ประกาศ token ของแต่ละกลุ่ม ฟังก์ชั่นนี้ให้รันทุกนาที
+function everyminute(){
+  //notifyontime("**ใส่publiclinkในนี้**@group.calendar.google.com", "**ใส่tokencodeในนี้**") //ส่วนตัว
+  notifyontime("**ใส่publiclinkในนี้**@group.calendar.google.com", "**ใส่tokencodeในนี้**") //บอทรุ่น เทียมเจียว
+  notifyontime("**ใส่publiclinkในนี้*@group.calendar.google.com", "**ใส่tokencodeในนี้**") //บอทฟามแคร์ เอแคร์
+}
+
+//var accessToken = "**ใส่tokencodeในนี้**"; //สนามเด้กเล่น
+//var accessToken = "**ใส่tokencodeในนี้**"; //ส่วนตัว
+
+#ฟังก์ชั่นเทียบนาที-นาที
+function notifyontime(googleCalendarId, accessToken, openingmessage){
+  //rxcu80calendar@gmail.com
+  var calendar = CalendarApp.getCalendarById(googleCalendarId);
+  var today = new Date();
+  var dailyEventList = calendar.getEventsForDay(today);
+  var now = today.toTimeString();
+  //Logger.log(dailyEventList);
+  
+  for (var i = 0; i < dailyEventList.length; i++) {  //loopทุกอีเว้น
+    var message = "";
+    var gettime1 = dailyEventList[i].getStartTime().toTimeString().slice(0,8);
+    var gettime2 = now;
+    var time1 = gettime1.slice(0,5) 
+    var time2 = gettime2.slice(0,5) 
+    
+    //var eventTitle = "\nวิชา: " + dailyEventList[i].getTitle();
+    //var eventTime = "ช่วงเวลา: " + dailyEventList[i].getStartTime().toTimeString().slice(0,8) + " - " + dailyEventList[i].getEndTime().toTimeString().slice(0,8);;
+    var eventDescribtion = dailyEventList[i].getDescription();
+    //message += "\n \n" + "ขณะนี้เหลือเวลาอีก " + cal + " นาทีก็จะถึง" + eventTitle + "\n" + eventTime;
+    message += "\n" + eventDescribtion;
+    /*
+    if(eventDescribtion != "รายละเอียด: "){
+      message += "\n" + eventDescribtion;
+    }
+    */
+    
+    
+    //logข้อมูลไว้ให้มีอ่าน
+    Logger.log("************************");
+    Logger.log(message);
+    Logger.log("gettime1 (event): " + gettime1);
+    Logger.log("gettime2 (now): " + gettime2);
+    Logger.log("time1(event): " + time1);
+    Logger.log("time2(now): " + time2);
+    Logger.log("hour diff: " + (time1.slice(0,2) - time2.slice(0,2)));
+    Logger.log("min equal: " + (time1.slice(3,5) == time2.slice(3,5)));
+    
+    if((time1.slice(0,2) - time2.slice(0,2) == 1) && (time1.slice(3,5) == time2.slice(3,5))){
+      sendMessage("ในอีก 1 ชั่วโมงบอทจะส่งข้อความ\n\n***" + message, "QUr9qUmLKUBaMF4YNWacNNXDgfpz0CS4WwVHRBselwK");
+    }
+    
+    
+    //status checker ได้ผลมั้ยกูไม่รู้ว่ะ
+    if(time1 == time2){
+      sendMessage(message, accessToken);
+      Logger.log("status: sending");
+    }
+    else if(time1.slice(0,2) - time2.slice(0,2) <= 0){
+      if((time1.slice(0,2) == time2.slice(0,2)) && (time1.slice(3,5) > time2.slice(3,5))){
+        Logger.log("status: sent");
+      }
+      if(time1.slice(0,2) < time2.slice(0,2)){
+        Logger.log("status: sent");
+      }
+    }
+    else
+    {
+      Logger.log("status: not yet");
+    }
+    
+ 
+  }
+  //หยุดถ้าไม่มีข้อความไรเลย
+  if (message === "") {
+    return;
+  }
+}
+
+#ไว้ใช้ส่งข้อความ
+function sendMessage(message, accessToken) {
+  var lineNotifyEndPoint = "https://notify-api.line.me/api/notify";
+  var formData = {
+    "message": message
+  };
+  
+  var options = {
+    "headers" : {"Authorization" : "Bearer " + accessToken},
+    "method" : 'post',
+    "payload" : formData
+  };
+
+  try {
+    var response = UrlFetchApp.fetch(lineNotifyEndPoint, options);
+  }
+  catch (error) {
+    Logger.log(error.name + "：" + error.message);
+    return;
+  }
+    
+  if (response.getResponseCode() !== 200) {
+    Logger.log("Sending message failed.");
+  } 
+}
+
+
+//ฟังก์ชั่นนี้เช็ค event ในอีก 7 วันของตารางรุ่น (เทียมเจียว) แล้วส่งไปยังกลุ่มไว้ monitor บอท
+function checknext7dayevent() {
+  var googleCalendarId = "6k84dl3l9bj6j0bqcbrfbcealo@group.calendar.google.com";
+  var calendar = CalendarApp.getCalendarById(googleCalendarId);
+  var today = new Date(); //จะให้วันปัจจุบัน
+  var now = today.toTimeString();
+  
+  sendMessage("ขออนุญาตแจ้งเตือนปชสพอัตโนมัติ ที่บอทจะส่งลงไลน์รุ่นในอีก 7 วันข้างหน้านะครับพี่ \n\n\n\n", "**ใส่tokencodeกลุ่มในนี้**");
+  for (var y = 0; y < 10; y++){
+    var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() +y)
+    var dailyEventList = calendar.getEventsForDay(tomorrow);
+    
+    for (var i = 0; i < dailyEventList.length; i++) {
+      var message = "";
+      var eventTitle = /*"หัวข้อปชสพ: " + */dailyEventList[i].getTitle();
+      var eventTime = /*"เวลาลงปชสพ: " +  */dailyEventList[i].getStartTime().toLocaleString('th-TH').split(" ",1) + " (" +dailyEventList[i].getStartTime().toTimeString().slice(0,5) + ")" //+ " - " + dailyEventList[i].getEndTime().toTimeString().slice(0,5);;
+      var eventDescribtion = /*"ข้อความปชสพ: \n" + */dailyEventList[i].getDescription();
+      message += eventTitle + "\n" + eventTime + "\n" +  eventDescribtion + "\n\n" ;
+      Logger.log(message);
+      //sendMessage(message, "B3snPI1TDItCPWXmK9hurJ9OFeyonjVc5gomGXSVqDd"); //ส่วนตัว
+      sendMessage(message, "**ใส่tokencodeกลุ่มในนี้**"); //กลุ่มบอท
+      
+    }
+  
+  }
+}
+  
+
+
+
+  
