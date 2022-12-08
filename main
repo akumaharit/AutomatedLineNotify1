@@ -57,7 +57,7 @@ function notifyontime(googleCalendarId, accessToken, openingmessage){
     Logger.log("min equal: " + (time1.slice(3,5) == time2.slice(3,5)));
     
     if((time1.slice(0,2) - time2.slice(0,2) == 1) && (time1.slice(3,5) == time2.slice(3,5))){
-      sendMessage("ในอีก 1 ชั่วโมงบอทจะส่งข้อความ\n\n***" + message, "QUr9qUmLKUBaMF4YNWacNNXDgfpz0CS4WwVHRBselwK");
+      sendMessage("ในอีก 1 ชั่วโมงบอทจะส่งข้อความ\n\n***" + message, "**ใส่tokencodeในนี้**");
     }
     
     
@@ -133,7 +133,7 @@ function checknext7dayevent() {
       var eventDescribtion = /*"ข้อความปชสพ: \n" + */dailyEventList[i].getDescription();
       message += eventTitle + "\n" + eventTime + "\n" +  eventDescribtion + "\n\n" ;
       Logger.log(message);
-      //sendMessage(message, "B3snPI1TDItCPWXmK9hurJ9OFeyonjVc5gomGXSVqDd"); //ส่วนตัว
+      //sendMessage(message, "**ใส่tokencodeในนี้**"); //ส่วนตัว
       sendMessage(message, "**ใส่tokencodeกลุ่มในนี้**"); //กลุ่มบอท
       
     }
